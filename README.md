@@ -58,9 +58,4 @@ Here, there was a bid of **$30** put on the **Cactus Decoration** which had an i
   ![responsiveness](./images/responsive.gif)
   <br>
 Here, multiple pages of the auction website are shown in the __IphoneX__ screen view
-  <hr>
-
-### Credits
-- Harvard CS50 for this idea of a wonderful project.
-- Implemented by __Aadhieaswar Senthil Kumar__
-  - Contact me at: <aadhieaswar@gmail.com>
+  <hr>git status
