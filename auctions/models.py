@@ -8,13 +8,13 @@ class User(AbstractUser):
 # stores the Listings
 class Listing(models.Model):
     CATEGORIES = [
-        ('Accessories', 'Accessories'),
-        ('Antiques', 'Antiques'),
-        ('Clothes', 'Clothes'),
-        ('Decoration', 'Decoration'),
-        ('Electronics', 'Electronics'),
-        ('Valuables', 'Valueables'),
-        ('Other', 'Other'),
+        ('HONDA', 'HONDA'),
+        ('MITSUBISHI', 'MITSUBISHI'),
+        ('NISSAN', 'NISSAN'),
+        ('HYUNDAI', 'HYUNDAI'),
+        ('KIA', 'KIA'),
+        ('SUZUKI', 'SUZUKI'),
+        ('TOYOTA', 'TOYOTA'),
     ]
     STATUS = [
         ('Pending', 'Pending'),

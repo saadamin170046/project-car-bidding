@@ -1,70 +1,345 @@
 {% extends "auctions/layout.html" %}
-
+{% load static %}
 {% block body %}
-  <div class="add-listing-container">
-    <h2 class="blue-text margin-bot">
-      Active Listings
-    </h2>
-    {% if user.is_authenticated %}
-    <h5 title="add listing" class="plus-container">
-      <a class="btn btn-outline-success plus-link" href="{% url 'auctions:add_listing' %}">+ Add new Listing</a>
-      <a class="btn btn-outline-warning plus-link" href="{% url 'auctions:user_listings' %}">
-        View Your Listings
-      </a>
-    </h5>
-    {% endif %}
-  </div>
+<div class="add-listing-container">
 
-  {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-      {{ message }}
-    </div>
-    {% endfor %}
+  {% if user.is_authenticated %}
+  <h5 title="add listing" class="plus-container">
+    <a class="btn btn-outline-success plus-link" href="{% url 'auctions:add_listing' %}">+ Add new Listing</a>
+    <a class="btn btn-outline-warning plus-link" href="{% url 'auctions:user_listings' %}">
+      View Your Listings
+    </a>
+  </h5>
   {% endif %}
+</div>
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
 
-  {% if listings %}
-  <ul class="listings">
+{% if listings %}
+<section class="container my-5">
+  <h2 class="blue-text margin-bot">
+    Active Listings
+  </h2>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for list in listings %}
-    <li>
-      <div class="card">
-        <div class="card-header">
-          {{ list.listing.name }}
+
+
+    <!-- <div class="card-body text-black">
+      <img alt="{{ list.listing.name }} - img" src="{{ list.listing.image.url }}" height="170" />
+      {% ifnotequal list.bid None %}
+      <h5 class="list-cost" style="color: var(--danger)">Bidding has started on this item</h5>
+      <h5 class="list-cost">Current Highest Bid: <strong style="color: var(--warning)">${{ list.bid.highest_bid
+          }}</strong></h5>
+      {% else %}
+      <h5 class="list-cost" style="color: var(--success)">No Bids Currently Placed</h5>
+      <h5 class="list-cost">Bid Starts From: <strong>${{ list.listing.initial }}</strong> </h5>
+      {% endifnotequal %}
+      <h5> Category: <strong style="color: var(--gray)">{{ list.listing.category }}</strong> </h5>
+      {% if user.is_authenticated %}
+      <div class="links-box">
+        <a class="btn btn-outline-primary" href="{% url 'auctions:listing' list.listing.id %}">View Listing</a>
+        <a class="btn btn-outline-success" href="{% url 'auctions:add_to' list.listing.id %}">Add to WatchList</a>
+        {% ifequal listing.user user %}
+        <a class="btn btn-outline-danger" href="{% url 'auctions:close_listing' list.listing.id %}">Close Listing</a>
+        {% endifequal %}
+      </div>
+      {% else %}
+      <a class="nav-link" href="{% url 'auctions:login' %}">LogIn to view listing</a>
+      {% endif %}
+      <h6 class="text-muted right-align">Date added: {{ list.listing.created }}</h6>
+    </div> -->
+
+
+
+    <div class="col">
+      <div class="card bg-secondary bg-opacity-25">
+        <img src="{{ list.listing.image.url }}" class="card-img-top" alt="...">
+        <div class="card-body text-white">
+
           {% ifequal list.listing.user user %}
           <div class="owned-icon" title="You Own This Listing">
             ★
           </div>
           {% endifequal %}
-        </div>
-        <div class="card-body">
-          <img alt="{{ list.listing.name }} - img" src="{{ list.listing.image.url }}" height="170" />
+          <h2 class="card-title"> {{ list.listing.name }}</h2>
           {% ifnotequal list.bid None %}
           <h5 class="list-cost" style="color: var(--danger)">Bidding has started on this item</h5>
-          <h5 class="list-cost">Current Highest Bid: <strong style="color: var(--warning)">${{ list.bid.highest_bid }}</strong></h5>
+
+          <h5 class="list-cost">Current Highest Bid: ${{list.bid.highest_bid}} </h5>
           {% else %}
           <h5 class="list-cost" style="color: var(--success)">No Bids Currently Placed</h5>
           <h5 class="list-cost">Bid Starts From: <strong>${{ list.listing.initial }}</strong> </h5>
           {% endifnotequal %}
-          <h5> Category: <strong style="color: var(--gray)">{{ list.listing.category }}</strong> </h5>
-          {% if user.is_authenticated %}
-          <div class="links-box">
-            <a class="btn btn-outline-primary" href="{% url 'auctions:listing' list.listing.id %}">View Listing</a>
-            <a class="btn btn-outline-success" href="{% url 'auctions:add_to' list.listing.id %}">Add to WatchList</a>
-            {% ifequal listing.user user %}
-            <a class="btn btn-outline-danger" href="{% url 'auctions:close_listing' list.listing.id %}">Close Listing</a>
-            {% endifequal %}
+
+          <div class="text-center">
+            <!-- <button type="button" class="btn btn-warning btn-lg my-2"><a
+                href="{% url 'auctions:listing' list.listing.id %}" class="text-decoration-none">View
+                Details</a></button> -->
+            {% if user.is_authenticated %}
+            <div class="links-box">
+              <a class="btn btn-outline-primary" href="{% url 'auctions:listing' list.listing.id %}">View Listing</a>
+              <a class="btn btn-outline-success" href="{% url 'auctions:add_to' list.listing.id %}">Add to WatchList</a>
+              {% ifequal listing.user user %}
+              <a class="btn btn-outline-danger" href="{% url 'auctions:close_listing' list.listing.id %}">Close
+                Listing</a>
+              {% endifequal %}
+            </div>
+            {% else %}
+            <a class="btn btn-outline-primary" href="{% url 'auctions:login' %}">LogIn to view listing</a>
+            {% endif %}
           </div>
-          {% else %}
-          <a class="nav-link" href="{% url 'auctions:login' %}">LogIn to view listing</a>
-          {% endif %}
-          <h6 class="text-muted right-align">Date added: {{ list.listing.created }}</h6>
         </div>
       </div>
-    </li>
+    </div>
     {% endfor %}
-    <li class="card card-header bg-info">
-      <div style="text-align: center; color: white;"> --- END --- </div>
-    </li>
-  </ul>
-  {% endif %}
+  </div>
+</section>
+
+
+<!-------------- 
+           Popular 
+        ---------------->
+
+<section class="container my-5">
+  <h1 class="text-warning my-5">Popular Makes</h1>
+  <div class="bg-secondary bg-opacity-25 rounded-4 text-center">
+    <img class="logo-img" src="{% static 'images/logo honda.jpg' %}" alt="">
+    <img class="logo-img" src="{% static 'images/logo mitsubishi.png' %}" alt="">
+    <img class="logo-img" src="{% static 'images/logo nissan.jpg' %}" alt="">
+    <img class="logo-img" src="{% static 'images/logo mazda.jpg' %}" alt="">
+    <img class="logo-img" src="{% static 'images/logo hyundai.jpg' %}" alt="">
+    <img class="logo-img" src="{% static 'images/logo kia.jpg' %}" alt="">
+    <img class="logo-img" src="{% static 'images/logo suzuki.jpg' %}" alt="">
+    <img class="logo-img" src="{% static 'images/logo toyota.jpg' %}" alt="">
+  </div>
+</section>
+
+<!------------ 
+            FAQ 
+        -------------->
+
+<section class="container my-5">
+  <h1 class="text-warning my-5">Frequently Asked Questions</h1>
+  <div class="accordion accordion-flush mx-5" id="accordionFlushExample">
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+          What are the requirements to join Car Auctions?
+        </button>
+      </h2>
+      <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">To become a member, you must provide contact information, including
+          a valid email address, and a valid driver's license or a passport if you are an
+          international customer.</div>
+      </div>
+    </div>
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+          How do I place a bid?
+        </button>
+      </h2>
+      <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">After completing the registration and placing your refundable
+          security deposit, find the vehicle you are interested in. To bid in Preliminary Bidding,
+          enter the maximum amount you are willing to pay for the vehicle in the field labeled "Enter
+          Your Maximum Possible Bid," and press "Bid Now."
+
+          If you are a Starter, Premium or VIP member you can also bid during the Live Auction.</div>
+      </div>
+    </div>
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+          Can I cancel my bid?
+        </button>
+      </h2>
+      <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">Once a bid is placed, it cannot be canceled or reduced in any way.
+          Make sure that you are confident in your bid before you place it. If you end up winning the
+          bid that you placed by accident, you will be responsible for the vehicle and completing the
+          sale.</div>
+      </div>
+    </div>
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingFour">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+          How long am I able to bid on each vehicle?
+        </button>
+      </h2>
+      <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">Each auction has a "Time Left" indicator at the top right of the
+          auction box. This will inform you how long you have to place your bid before the live online
+          auction begins.</div>
+      </div>
+    </div>
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingFive">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+          Does the bid amount include all of the auction fees?
+        </button>
+      </h2>
+      <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">No. The bid amount ONLY includes the price you are willing to pay
+          for the vehicle.
+
+          Auction fees, Car Auctions fees, documentation fees, and transportation costs are NOT
+          INCLUDED
+          in the bid and will be added on top of the bid amount. You can calculate the estimated fees
+          for each vehicle at any time using the fee calculator provided below the auction box of each
+          vehicle.</div>
+      </div>
+    </div>
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingSix">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+          Can I buy in a different state?
+        </button>
+      </h2>
+      <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">Yes! With Car Auctions there are no restrictions on where you are
+          able
+          to buy. If you require help with shipping, we recommend EasyHaul.com for all your vehicle
+          transportation needs!</div>
+      </div>
+    </div>
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingSeven">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+          Do you sell to international customers?
+        </button>
+      </h2>
+      <div id="flush-collapseSeven" class="accordion-collapse collapse" aria-labelledby="flush-headingSeven"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">Yes! We have many international customers all over the world. You
+          are welcome to reach out to us for any specific details that you may have regarding
+          shipping, export, as well as tips and tricks regarding bidding.</div>
+      </div>
+    </div>
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingEight">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseEight" aria-expanded="false" aria-controls="flush-collapseEight">
+          What is a security deposit?
+        </button>
+      </h2>
+      <div id="flush-collapseEight" class="accordion-collapse collapse" aria-labelledby="flush-headingEight"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">The security deposit is collected in advance via credit card or wire
+          transfer as a guarantee that the bidder will complete the purchase of their vehicle.
+
+          Security deposits on a credit card are not typically charged and removed from your account,
+          but instead are simply a 'pending authorization' placing the funds on reserve.
+
+          A security deposit may be forfeited if you win the auction and do not complete the purchase,
+          or if you have an unpaid outstanding balance. The pending status will be removed and your
+          account can be charged, up to the full security deposit amount.</div>
+      </div>
+    </div>
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingNine">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseNine" aria-expanded="false" aria-controls="flush-collapseNine">
+          How long do I have to submit payment?
+        </button>
+      </h2>
+      <div id="flush-collapseNine" class="accordion-collapse collapse" aria-labelledby="flush-headingNine"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">Payment for won vehicles must be received by 5pm Pacific Standard
+          Time the following business day from the sale. Starter, Premium, VIP members get an
+          additional business day to complete their transactions.
+
+          A business day is considered a weekday (Monday-Friday) that is not a Federal holiday.
+          International members will be allotted two business days to have the payment received into
+          the account.
+
+          For example, if you are awarded a vehicle on Monday, then the funds from the wire transfer
+          must be received by us no later than 5pm PST on Tuesday.
+
+          If payment is received one day late, a $100 or 2% of the sale price (whichever is greater)
+          late payment fee will be added to your account for every day that the payment is late.</div>
+      </div>
+    </div>
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingTen">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseTen" aria-expanded="false" aria-controls="flush-collapseTen">
+          When can I pick up a vehicle I won?
+        </button>
+      </h2>
+      <div id="flush-collapseTen" class="accordion-collapse collapse" aria-labelledby="flush-headingTen"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">You can pick up the vehicle or arrange for shipping as soon as you
+          receive the email from us confirming that the vehicle is ready for pick-up.
+
+          You will need to sign the bill of sale and other sales documents (online in My Account by
+          e-sign) before you will receive this notice. Typically, you will receive notification the
+          same day payment is applied and processed, and the documents are signed.</div>
+      </div>
+    </div>
+    <div class="accordion-item mx-5">
+      <h2 class="accordion-header" id="flush-headingEleven">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseEleven" aria-expanded="false" aria-controls="flush-collapseEleven">
+          What is required before I can pick up the vehicle?
+        </button>
+      </h2>
+      <div id="flush-collapseEleven" class="accordion-collapse collapse" aria-labelledby="flush-headingEleven"
+        data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">In order to pick-up your vehicle, you must have paid your invoice in
+          full and have a zero balance with Car Auctions.
+
+          In addition, you will need to sign the bill of sale and other sales documents (online in My
+          Account by e-sign). Car Auctions will email you pick-up instructions including the yards
+          address, hours and pick-up authorization.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!------------------------ 
+          Terms and Conditions 
+        -------------------------->
+</main>
+
+<footer class="bg-secondary bg-opacity-25">
+  <h4 class="text-center text-white pt-4 pb-3 fw-lighter">Follow us on</h4>
+  <div class="text-center text-white fs-4">
+    <i class="bi bi-facebook mx-3"></i>
+    <i class="bi bi-instagram mx-3"></i>
+    <i class="bi bi-twitter mx-3"></i>
+    <i class="bi bi-linkedin mx-3"></i>
+  </div>
+  <div class="text-center mt-3">
+    <small class="text-white">Copyright © 2022 Coopart Inc. All Rights Reserved || <a
+        class="text-decoration-none text-white" href="https://www.iaai.com/TermsOfUse">Terms of Use </a> ||
+      <a class="text-decoration-none text-white" href="https://www.iaai.com/PrivacyPolicy">Privacy Policy
+      </a></small>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
+{% endif %}
 {% endblock %}

@@ -7,16 +7,16 @@
 {% block body %}
 
 {% if messages %}
-  {% for message in messages %}
-  <div class="alert alert-{{ message.tags }}">
-    {{ message }}
-  </div>
-  {% endfor %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+  {{ message }}
+</div>
+{% endfor %}
 {% endif %}
 
 <h2 class="listing-name">{{ listing.name }}</h2>
 
-<div class="listing-img" >
+<div class="listing-img">
   <img alt="{{ listing.name }} - img" src="{{ listing.image.url }}" />
 </div>
 
@@ -50,7 +50,8 @@
     <div class="input-group-prepend">
       <div class="input-group-text bg-warning">$</div>
     </div>
-    <input class="form-control" type="number" min="1" name="bid" value="{{ default_bid }}" placeholder="Enter your bid here">
+    <input class="form-control" type="number" min="1" name="bid" value="{{ default_bid }}"
+      placeholder="Enter your bid here">
   </div>
   <input name="list_id" type="hidden" value="{{ listing.id }}" />
   <button class="btn btn-primary" type="submit" style="margin-top: 10px;">Place Bid</button>
@@ -64,9 +65,9 @@
 <div class="listing-comments">
   <h5>Comments </h5>
   <div class="comment-container">
-  {% if comments %}
+    {% if comments %}
     {% for comment in comments %}
-    <div class="card bg-light border-success" style="margin: 5px;">
+    <div class="card bg-light border-success text-dark" style="margin: 5px;">
       <div class="comment-owner">
         {{ comment.user }}
       </div>
@@ -78,17 +79,18 @@
       </span>
     </div>
     {% endfor %}
-  {% else %}
-  <span class="text-muted">
-    No comments at the moment
-  </span>
-  {% endif %}
+    {% else %}
+    <span class="text-muted">
+      No comments at the moment
+    </span>
+    {% endif %}
   </div>
   <hr>
   <form class="comment-form" action="{% url 'auctions:comment' %}" method="POST">
     Your Comment:
     {% csrf_token %}
-    <textarea name="content" class="form-control" placeholder="enter your comment here" rows="3" maxlength="400"></textarea>
+    <textarea name="content" class="form-control" placeholder="enter your comment here" rows="3"
+      maxlength="400"></textarea>
     <input name="list_id" type="hidden" value="{{ listing.id }}" />
     <button class="btn btn-primary" type="submit">Comment</button>
   </form>
