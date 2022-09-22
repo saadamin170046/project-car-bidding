@@ -7,7 +7,7 @@ from django.contrib import messages
 
 from decimal import *
 
-from .models import User, Listing, Bid, Comment
+from .models import User, Listing, Bid, Comment ,Bider
 from .forms import ListingForm
 from .decorators import Unauthenticated_user, Authenticated_user
 
@@ -30,6 +30,15 @@ def index(request):
         'listings': listings,
     }
     return render(request, "auctions/index.html", context)
+@Authenticated_user    
+def biderlist(request,listing):
+    item = Listing.objects.get(pk=listing)
+    biders = Bider.objects.filter(listing=item)
+    context = {
+        'biders':biders,
+    }
+    return render(request, "auctions/biderList.html", context)    
+    
 
 @Unauthenticated_user
 def login_view(request):
@@ -123,10 +132,10 @@ def bid(request):
     if request.method == "POST":
         new_bid = request.POST["bid"]
         item_id = request.POST["list_id"]
-
         item = Listing.objects.get(pk=item_id)
+        newBider = Bider(user=request.user, price=new_bid, listing=item)
+        newBider.save()
         old_bid = Bid.objects.filter(listing=item)
-
         if old_bid.count() < 1:
             bid = Bid(user=request.user, listing=item, highest_bid=new_bid)
             bid.save()

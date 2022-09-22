@@ -56,3 +56,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.comment} - by {self.user}"
+        
+class Bider(models.Model):
+    user = models.ForeignKey(User, blank = False, on_delete = models.CASCADE)
+    listing = models.ForeignKey(Listing, blank = False, on_delete = models.CASCADE)
+    price = models.CharField(max_length = 400, blank = False)
+    added = models.DateTimeField(auto_now_add = True)
+    def __str__(self):
+        return f"{self.user} - bids {self.price}"

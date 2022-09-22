@@ -1,0 +1,57 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+
+
+<h1 class="fs-3 text-center text-warning">All bider list</h1>
+
+<div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+
+
+    {% if biders %}
+    <section class="container">
+        <div class="row">
+            <div class="">
+                <table class="table table-striped bg-white bg-opacity-75 rounded text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                Bider Name
+                            </th>
+                            <th scope="col">
+                                price
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bider in biders %}
+                    <tbody>
+                        <tr>
+                            <td>
+                                {{bider.user}}
+                            </td>
+                            <td>
+                                {{bider.price}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <h1 class="fs-3 text-center text-danger"> there is No bider</h1>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+</html>
+{% endblock %}
